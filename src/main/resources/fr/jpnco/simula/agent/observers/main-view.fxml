@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TreeView?>
+<?import javafx.scene.layout.FlowPane?>
+
+<SplitPane
+    xmlns="http://javafx.com/javafx"
+    xmlns:fx="http://javafx.com/fxml"
+    fx:controller="fr.jpnco.simula.agent.observers.MainViewController"
+    styleClass="main-split"
+    dividerPositions="0.3"
+    prefHeight="600"
+    prefWidth="900">
+  <items>
+    <TreeView fx:id="engineTree" styleClass="engine-tree" showRoot="true" prefWidth="260"/>
+    <ScrollPane fitToWidth="true" fitToHeight="true">
+      <content>
+        <FlowPane fx:id="actorPane" styleClass="actor-pane" hgap="10" vgap="10" prefWrapLength="500"/>
+      </content>
+    </ScrollPane>
+  </items>
+</SplitPane>

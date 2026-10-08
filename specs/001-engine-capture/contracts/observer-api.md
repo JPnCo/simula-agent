@@ -4,9 +4,9 @@
 
 The agent jar exposes two public types for developer-written observer code.
 Observer code compiled against these types uses the framework's own interfaces
-(`jpnco.simula.Engine`, `jpnco.simula.Actor`) directly — no reflection.
+(`fr.jpnco.simula.Engine`, `fr.jpnco.simula.Actor`) directly — no reflection.
 
-## `jpnco.simula.agent.api.SimulaTarget`
+## `fr.jpnco.simula.agent.api.SimulaTarget`
 
 ```java
 public final class SimulaTarget {
@@ -21,7 +21,7 @@ public final class SimulaTarget {
 }
 ```
 
-## `jpnco.simula.agent.api.SimulaObserver`
+## `fr.jpnco.simula.agent.api.SimulaObserver`
 
 ```java
 public interface SimulaObserver {
@@ -47,7 +47,7 @@ public interface SimulaObserver {
 ## Visibility notes
 
 - The observer class must be loadable by the application (system) class loader.
-- Because the framework module `simula` exports `jpnco.simula`, observer code on
+- Because the framework module `simula` exports `fr.jpnco.simula`, observer code on
   the classpath may import and use `Engine`/`Actor` freely.
 - The engine handed to the observer is the live application engine: subscribing to
   topics and registering actors are real actions on the running simulation.

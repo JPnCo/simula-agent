@@ -235,3 +235,31 @@ Task: "Write failing tests for capture.EngineTransformer"
   `SimulaAgent` (premain), `EngineCaptureAdvice` (inlined template) and
   `LoggingAgentListener` (callbacks fire only on real class loads). Achieved
   coverage: 116/117 lines (99.1%), 41/41 branches.
+
+---
+
+## Phase 6: Convergence
+
+- [ ] T022 Declare the canonical constructor arity used by
+      `EngineTransformer.constructorMatcher()` (`takesArguments(4)` in
+      `src/main/java/jpnco/simula/agent/capture/EngineTransformer.java`) as a
+      named constant so no raw numeric literal other than -1/0/1 remains in
+      production code per Constitution VII (contradicts) [CRITICAL]
+- [ ] T023 Extend the integration proof for time-event delivery: register a real
+      actor on the captured engine's time topic in `fixture/ITObserver` (and run
+      the engine in `fixture/Main`) and assert the received time-event marker in
+      `EngineCaptureIT` per SC-001, US1/AC2 (partial) [HIGH]
+- [ ] T024 Assert byte-identical stdout and equal exit code between a
+      no-agent run and an agent-without-observer run of `fixture/Main` in
+      `EngineCaptureIT`, replacing the current exit-code-only comparison per
+      SC-002, US1/AC3, capture-contract.md Verification (partial) [HIGH]
+- [ ] T025 Log exactly one `[simula-agent]` diagnostic when the observer session
+      ends in the not-available outcome in
+      `src/main/java/jpnco/simula/agent/ObserverRunner.java` per US2/AC2
+      (partial) [HIGH]
+- [ ] T026 Assert in `EngineCaptureIT` that a plain JVM run with the agent
+      attached produces at most one `[simula-agent]` diagnostic line (including
+      an agent-without-observer variant) per SC-003 (partial) [MEDIUM]
+- [ ] T027 Start the observer daemon thread in `SimulaAgent.premain` only when an
+      observer class is configured, instead of starting an idle thread per
+      T012, FR-005 (partial) [LOW]

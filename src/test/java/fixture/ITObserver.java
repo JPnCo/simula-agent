@@ -1,7 +1,7 @@
 package fixture;
 
-import jpnco.simula.Engine;
-import jpnco.simula.agent.api.SimulaObserver;
+import fr.jpnco.simula.Engine;
+import fr.jpnco.simula.agent.api.SimulaObserver;
 
 /**
  * Integration observer fixture: uses the captured engine through its typed {@link Engine} API (no

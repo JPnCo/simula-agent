@@ -1,6 +1,6 @@
 package fixture;
 
-import jpnco.simula.engine.EngineImpl;
+import fr.jpnco.simula.engine.EngineImpl;
 
 /**
  * Integration fixture application: builds a real root engine from the framework (loaded as the

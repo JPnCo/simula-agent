@@ -9,12 +9,12 @@ capture capability assumes this shape.
 ## The depended-upon signature
 
 ```
-jpnco.simula.engine.EngineImpl
+fr.jpnco.simula.engine.EngineImpl
   private EngineImpl(String title, Engine parent, int timeFactor, ExecutionMode mode)
 ```
 
-- **Descriptor**: `(Ljava/lang/String;Ljpnco/simula/Engine;I` +
-  `Ljpnco/simula/engine/ExecutionMode;)V`
+- **Descriptor**: `(Ljava/lang/String;Lfr/jpnco/simula/Engine;I` +
+  `Lfr/jpnco/simula/engine/ExecutionMode;)V`
 - **Why it is sufficient**: every public `EngineImpl` constructor in the framework
   delegates to this canonical private constructor (verified in framework source
   for `simula` 0.0.1-SNAPSHOT). Transforming it observes all engine creations.

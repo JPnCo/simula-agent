@@ -1,6 +1,6 @@
 # Architecture — simula-agent
 
-The `simula-agent` is a `-javaagent` that captures the **root** `jpnco.simula.Engine`
+The `simula-agent` is a `-javaagent` that captures the **root** `fr.jpnco.simula.Engine`
 of a running simula application and hands it, typed as `Engine`, to a developer-supplied observer.
 The host application and the framework jar are never modified: the agent instruments the framework
 `EngineImpl` constructor at class-load time and communicates across the JPMS boundary through a
@@ -91,8 +91,8 @@ sequenceDiagram
   any agent type inside the transformed framework class.
 - **Exactly-one outcome.** `ObserverRunner` delivers `engineAvailable` or `engineUnavailable` once and
   confines any observer exception (logged, never rethrown).
-- **Named target by contract, not by link.** `EngineTransformer` matches `jpnco.simula.engine.EngineImpl`
-  and its constructor structurally (4 arguments, `jpnco.simula.Engine` parent at index 1), so the
+- **Named target by contract, not by link.** `EngineTransformer` matches `fr.jpnco.simula.engine.EngineImpl`
+  and its constructor structurally (4 arguments, `fr.jpnco.simula.Engine` parent at index 1), so the
   agent compiles with a `provided` framework dependency and links to none of its bytecode.
 
 ## Instrumentation contract
@@ -110,3 +110,31 @@ framework's documented instrumentation anchor `EngineImpl.checkSupervision()` an
 before the method body runs. The body then registers the framework's `SimulaSupervisor`. The inlined
 write references only the instrumented type's own `boolean` field, so it stays valid inside the named
 `simula` module and is suppressed on any `Throwable` (Constitution IX).
+
+## Supervision watch (feature 002)
+
+`api/SupervisionWatcher` lets an observer stream actor lifecycle changes. It attaches the
+framework's `SupervisionListener` (`specs/002-supervision-watch/contracts/supervision-listener.md`,
+a typed compile dependency) to every `SimulaSupervisor` in the engine tree and runs a
+listen/iterate-then-drain loop: callbacks only enqueue `(supervisor, actor)` hints (plus a subtree
+scan request when the recorded actor is itself an `Engine`, which is how a late-started child engine
+is discovered); each cycle applies the due scans, then drains the hint queue re-reading the live
+`getStates()` map per hinted actor, so mid-cycle changes are never lost nor delivered twice. The
+full-tree walk and per-supervisor catch-up snapshots run once at start and then once per second as
+the safety fallback — the only case no callback can announce is `addChild` of a child that is never
+registered as an actor. Actors registered after the supervisor was built are invisible to the
+framework's own recording, so each scan also reconciles raw membership: in `getActors()` but absent
+from the states means synthetic `null -> STARTED`, gone from both means synthetic `STARTED ->
+STOPPED` (FR-110). Dispatch and cycles are exception-contained; supervisors that leave
+the tree are detached, after reporting every last known status once as a disappearance
+(`current == null`). The JavaFX demo drains a `StatusLedger` queue on the FX thread into an
+`ObservableMap` that colors actor boxes `started`/`stopped`; status repaints are coalesced so a
+burst of events causes at most one re-render per FX pulse. A disappearance event reads as `STOPPED`
+and both stopped actors and stopped engines stay remembered (red) for the whole session — the tree
+only ever grows — so stopping something recolors it instead of deleting it. Engines are themselves actors that
+self-record in their own supervisor yet never appear in their own `getActors()` list, so the demo
+colors the engine's *tree cell* with the same status map. The tree mirrors the pane: each engine node carries
+its registered actors as leaf nodes (gear icon, same status coloring); selecting an actor node shows
+the pane of its engine. Every box carries a right-click `Stop`
+menu that dispatches `observers/StopRequest`: `Engine.stop()` for engine targets,
+`Actor.stopMe()` (a `STOP_ME` event on the engine queue) for plain actors, exceptions contained.

@@ -2,8 +2,8 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>jpnco</groupId>
-	<artifactId>simula-agent</artifactId>
+  <groupId>fr.jpnco.simula</groupId>
+  <artifactId>simula-agent</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 
 	<properties>
@@ -35,8 +35,8 @@
 			<version>${bytebuddy.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>jpnco</groupId>
-			<artifactId>simula</artifactId>
+			<groupId>fr.jpnco.simula</groupId>
+			<artifactId>simula-core</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
@@ -102,7 +102,7 @@
 				<configuration>
 					<archive>
 						<manifestEntries>
-							<Premain-Class>jpnco.simula.agent.SimulaAgent</Premain-Class>
+							<Premain-Class>fr.jpnco.simula.agent.SimulaAgent</Premain-Class>
 							<Can-Retransform-Classes>false</Can-Retransform-Classes>
 							<Can-Redefine-Classes>false</Can-Redefine-Classes>
 						</manifestEntries>
@@ -129,7 +129,7 @@
 							<relocations>
 								<relocation>
 									<pattern>net.bytebuddy</pattern>
-									<shadedPattern>jpnco.simula.agent.shaded.bytebuddy</shadedPattern>
+									<shadedPattern>fr.jpnco.simula.agent.shaded.bytebuddy</shadedPattern>
 								</relocation>
 							</relocations>
 							<filters>
@@ -197,7 +197,7 @@
 							</includes>
 							<systemPropertyVariables>
 								<agent.jar.path>${project.build.directory}/${project.build.finalName}.jar</agent.jar.path>
-								<simula.jar.path>${jpnco:simula:jar}</simula.jar.path>
+								<simula.jar.path>${fr.jpnco.simula:simula-core:jar}</simula.jar.path>
 								<fixture.classpath>${project.build.testOutputDirectory}</fixture.classpath>
 							</systemPropertyVariables>
 						</configuration>
@@ -215,17 +215,17 @@
 				<configuration>
 					<excludes>
 						<!-- premain glue: only the JVM can call it; behavior proven by integration tests -->
-						<exclude>jpnco/simula/agent/SimulaAgent.class</exclude>
+						<exclude>fr/jpnco/simula/agent/SimulaAgent.class</exclude>
 						<!-- advice template: inlined into transformed classes, never executed as-is -->
-						<exclude>jpnco/simula/agent/capture/EngineCaptureAdvice.class</exclude>
+						<exclude>fr/jpnco/simula/agent/capture/EngineCaptureAdvice.class</exclude>
 						<!-- advice template: inlined into transformed classes, never executed as-is -->
-						<exclude>jpnco/simula/agent/capture/SupervisionAdvice.class</exclude>
+						<exclude>fr/jpnco/simula/agent/capture/SupervisionAdvice.class</exclude>
 						<!-- transformation listener: its callbacks fire only on real class loads, in the integration JVM -->
-						<exclude>jpnco/simula/agent/capture/LoggingAgentListener.class</exclude>
+						<exclude>fr/jpnco/simula/agent/capture/LoggingAgentListener.class</exclude>
 						<!-- JavaFX demo observer: a real Application bound to the FX toolkit and a display, not unit-testable -->
-						<exclude>jpnco/simula/agent/observers/FxApp*.class</exclude>
-						<exclude>jpnco/simula/agent/observers/FxObserver*.class</exclude>
-						<exclude>jpnco/simula/agent/observers/MainViewController*.class</exclude>
+						<exclude>fr/jpnco/simula/agent/observers/FxApp*.class</exclude>
+						<exclude>fr/jpnco/simula/agent/observers/FxObserver*.class</exclude>
+						<exclude>fr/jpnco/simula/agent/observers/MainViewController*.class</exclude>
 					</excludes>
 				</configuration>
 				<executions>
